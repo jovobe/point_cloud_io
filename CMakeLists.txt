@@ -54,6 +54,11 @@ add_executable(
   src/write_node.cpp
   src/Write.cpp
 )
+add_executable(
+  bag
+  src/bag_node.cpp
+  src/Bag.cpp
+)
 
 ## Specify libraries to link executable targets against
 target_link_libraries(
@@ -64,3 +69,9 @@ target_link_libraries(
   write
   ${catkin_LIBRARIES}
 )
+target_link_libraries(
+  bag
+  ${catkin_LIBRARIES}
+)
+
+find_package(Boost REQUIRED)

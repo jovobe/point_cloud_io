@@ -69,7 +69,6 @@ bool Write::readParameters()
 void Write::pointCloudCallback(const sensor_msgs::PointCloud2ConstPtr& cloud)
 {
   ROS_INFO_STREAM("Received point cloud with " << cloud->height*cloud->width << " points.");
-std::cout << folderPath_ << std::endl;
   stringstream filePath;
   filePath << folderPath_ << "/";
   if (!filePrefix_.empty()) {

@@ -82,9 +82,10 @@ void Read::initialize()
   }
   else
   {
-    Duration(1.0).sleep(); // Need this to get things ready before publishing.
     if (!publish()) ROS_ERROR("Something went wrong when trying to read and publish the point cloud file.");
-    ros::requestShutdown();
+
+    // Just wait for other subscribers, latching will publish the message for them.
+    ros::spin();
   }
 }
 

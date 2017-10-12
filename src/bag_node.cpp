@@ -3,7 +3,7 @@
  *
  *  Created on: Oct 06, 2017
  *      Author: Johan M. von Behren
- *   Institute: ETH Zurich, Autonomous Systems Lab
+ *   Institute: Universität Osnabrück, Knowledge-Based Systems
  */
 
 #include <ros/ros.h>

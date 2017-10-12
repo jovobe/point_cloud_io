@@ -1,9 +1,9 @@
 /*
  * Bag.hpp
  *
- *  Created on: Nov 13, 2015
- *      Author: Remo Diethelm
- *	 Institute: ETH Zurich, Autonomous Systems Lab
+ *  Created on: Oct 06, 2017
+ *      Author: Johan M. von Behren
+ *   Institute: Universität Osnabrück, Knowledge-Based Systems
  */
 
 #pragma once

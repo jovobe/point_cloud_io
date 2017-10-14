@@ -1,19 +1,19 @@
 <launch>
-  <arg name="bag_path"    default="$(find point_cloud_io)/examples/some_cows.bag" />
-  <arg name="topics"      default="/point_cloud" />
-  <arg name="folder_path" default="$(find point_cloud_io)/examples" />
+    <arg name="bag_path" default="$(find point_cloud_io)/examples/some_cows.bag"/>
+    <arg name="topics" default="/point_cloud"/>
+    <arg name="folder_path" default="$(find point_cloud_io)/examples"/>
 
-  <!-- Write point clouds to file -->
-  <node pkg="point_cloud_io" type="bag" name="bag" output="screen">
-    <param name="bag_path"               value="$(arg bag_path)" />
-    <param name="topics"                 value="$(arg topics)" />
-    <param name="folder_path"            value="$(arg folder_path)" />
-    <param name="file_prefix"            value="received_cloud" />
-    <param name="file_ending"            value="ply" />
-    <param name="max_messages"           value="10" />
-    <param name="add_counter_to_path"    value="true" />
-    <param name="add_frame_id_to_path"   value="true" />
-    <param name="add_stamp_sec_to_path"  value="true" />
-    <param name="add_stamp_nsec_to_path" value="true" />
-  </node>
+    <!-- Write point clouds to file -->
+    <node pkg="point_cloud_io" type="bag" name="bag" output="screen">
+        <param name="bag_path" value="$(arg bag_path)"/>
+        <param name="topics" value="$(arg topics)"/>
+        <param name="folder_path" value="$(arg folder_path)"/>
+        <param name="file_prefix" value="received_cloud"/>
+        <param name="file_ending" value="ply"/>
+        <param name="max_messages" value="10"/>
+        <param name="add_counter_to_path" value="true"/>
+        <param name="add_frame_id_to_path" value="true"/>
+        <param name="add_stamp_sec_to_path" value="true"/>
+        <param name="add_stamp_nsec_to_path" value="true"/>
+    </node>
 </launch>

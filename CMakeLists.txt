@@ -6,11 +6,11 @@ add_definitions(--std=c++11)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED
-  COMPONENTS
+    COMPONENTS
     pcl_ros
     roscpp
     sensor_msgs
-)
+    )
 
 ###################################
 ## catkin specific configuration ##
@@ -22,14 +22,14 @@ find_package(catkin REQUIRED
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS
+    INCLUDE_DIRS
     include
-#  LIBRARIES
-  CATKIN_DEPENDS
+    #  LIBRARIES
+    CATKIN_DEPENDS
     pcl_ros
     roscpp
     sensor_msgs
-#  DEPENDS
+    #  DEPENDS
 )
 
 ###########
@@ -39,39 +39,39 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
+    include
+    ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare cpp executables
 add_executable(
-  read
-  src/read_node.cpp
-  src/Read.cpp
+    read
+    src/read_node.cpp
+    src/Read.cpp
 )
 add_executable(
-  write
-  src/write_node.cpp
-  src/Write.cpp
+    write
+    src/write_node.cpp
+    src/Write.cpp
 )
 add_executable(
-  bag
-  src/bag_node.cpp
-  src/Bag.cpp
+    bag
+    src/bag_node.cpp
+    src/Bag.cpp
 )
 
 ## Specify libraries to link executable targets against
 target_link_libraries(
-  read
-  ${catkin_LIBRARIES}
+    read
+    ${catkin_LIBRARIES}
 )
 target_link_libraries(
-  write
-  ${catkin_LIBRARIES}
+    write
+    ${catkin_LIBRARIES}
 )
 target_link_libraries(
-  bag
-  ${catkin_LIBRARIES}
+    bag
+    ${catkin_LIBRARIES}
 )
 
 find_package(Boost REQUIRED)

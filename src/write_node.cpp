@@ -9,13 +9,13 @@
 #include <ros/ros.h>
 #include "point_cloud_io/Write.hpp"
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "write");
-  ros::NodeHandle nodeHandle("~");
+    ros::init(argc, argv, "write");
+    ros::NodeHandle nodeHandle("~");
 
-  point_cloud_io::Write write(nodeHandle);
+    point_cloud_io::Write write(nodeHandle);
 
-  ros::spin();
-  return 0;
+    ros::spin();
+    return 0;
 }

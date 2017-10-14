@@ -9,13 +9,13 @@
 #include <ros/ros.h>
 #include "point_cloud_io/Bag.hpp"
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "bag");
-  ros::NodeHandle nodeHandle("~");
+    ros::init(argc, argv, "bag");
+    ros::NodeHandle nodeHandle("~");
 
-  point_cloud_io::Bag bag(nodeHandle);
+    point_cloud_io::Bag bag(nodeHandle);
 
-  ros::spin();
-  return 0;
+    ros::spin();
+    return 0;
 }

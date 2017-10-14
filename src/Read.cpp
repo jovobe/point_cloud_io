@@ -17,6 +17,8 @@
 #define VTK_EXCLUDE_STRSTREAM_HEADERS
 #include <pcl/io/vtk_lib_io.h>
 
+#include <unordered_set>
+
 using namespace std;
 using namespace ros;
 using namespace pcl;
@@ -93,11 +95,48 @@ bool Read::readFile(const std::string& filePath, const std::string& pointCloudFr
 {
   if (filePath.find(".ply") != std::string::npos) {
     // Load .ply file.
-    PointCloud<PointXYZRGBNormal> pointCloud;
-    if (loadPLYFile(filePath, pointCloud) != 0) return false;
+    auto dataIndicator = determinePLYData(filePath);
+    if (1 == dataIndicator)
+    {
+      // XYZ found (Bitmask: 0000 0001)
+      PointCloud<PointXYZ> pointCloudXYZ;
+      if (loadPLYFile(filePath, pointCloudXYZ) != 0) return false;
 
-    // Define PointCloud2 message.
-    toROSMsg(pointCloud, *pointCloudMessage_);
+      // Define PointCloud2 message.
+      toROSMsg(pointCloudXYZ, *pointCloudMessage_);
+    }
+    else if (3 == dataIndicator)
+    {
+      // XYZ and RGB found (Bitmask: 0000 0011)
+      PointCloud<PointXYZRGB> pointCloudXYZRGB;
+      if (loadPLYFile(filePath, pointCloudXYZRGB) != 0) return false;
+
+      // Define PointCloud2 message.
+      toROSMsg(pointCloudXYZRGB, *pointCloudMessage_);
+    }
+    else if (5 == dataIndicator)
+    {
+      // XYZ and normals found (Bitmask: 0000 0101)
+      PointCloud<PointXYZINormal> pointCloudXYZN;
+      if (loadPLYFile(filePath, pointCloudXYZN) != 0) return false;
+
+      // Define PointCloud2 message.
+      toROSMsg(pointCloudXYZN, *pointCloudMessage_);
+    }
+    else if (7 == dataIndicator)
+    {
+      // XYZ, normals and RGB found (Bitmask: 0000 0111)
+      PointCloud<PointXYZRGBNormal> pointCloudXYZRGBN;
+      if (loadPLYFile(filePath, pointCloudXYZRGBN) != 0) return false;
+
+      // Define PointCloud2 message.
+      toROSMsg(pointCloudXYZRGBN, *pointCloudMessage_);
+    }
+    else
+    {
+      ROS_ERROR_STREAM("Fields defined in given .ply file are not parseable!");
+      return false;
+    }
   }
   else if (filePath.find(".vtk") != std::string::npos) {
     // Load .vtk file.
@@ -132,6 +171,60 @@ bool Read::publish()
     ROS_INFO_STREAM("Point cloud published to topic \"" << pointCloudTopic_ << "\".");
   }
   return true;
+}
+
+uint8_t Read::determinePLYData(const std::string& filePath) {
+  PCLPointCloud2 tempCloud;
+  pcl::PLYReader p;
+  Eigen::Vector4f origin;
+  Eigen::Quaternionf orientation;
+  int ply_version;
+  int data_type;
+  unsigned int data_idx;
+
+  // Read header information from .ply file.
+  auto a = p.readHeader(filePath, tempCloud, origin, orientation, ply_version, data_type, data_idx);
+  if (a < 0)
+  {
+    ROS_ERROR_STREAM("Error reading header of " << filePath << "!");
+    return -1;
+  }
+
+  // Check the found headers
+  unordered_set<string> fields;
+  for (auto field: tempCloud.fields)
+  {
+    fields.insert(field.name);
+  }
+
+  // Create bitmask (0 = LSB, 7 = MSB) to indicate which data was found
+  // The bits mean the following, if they are set to 1:
+  // Bit |  Meaning
+  // ------------
+  // 0      XYZ found
+  // 1      RGB found
+  // 2      Normals found
+  // 3
+  // 4
+  // 5
+  // 6
+  // 7
+  // ------------
+  uint8_t bitmask = 0;
+  if (fields.find("x") != fields.end() && fields.find("y") != fields.end() && fields.find("z") != fields.end())
+  {
+    bitmask |= 1 << 0;
+  }
+  if (fields.find("red") != fields.end() && fields.find("green") != fields.end() && fields.find("blue") != fields.end())
+  {
+    bitmask |= 1 << 1;
+  }
+  if (fields.find("nx") != fields.end() && fields.find("ny") != fields.end() && fields.find("nz") != fields.end())
+  {
+    bitmask |= 1 << 2;
+  }
+
+  return bitmask;
 }
 
 } /* namespace */

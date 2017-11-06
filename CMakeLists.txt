@@ -43,21 +43,29 @@ include_directories(
     ${catkin_INCLUDE_DIRS}
 )
 
+set(
+    point_cloud_io_utility
+    src/Utility.cpp
+)
+
 ## Declare cpp executables
 add_executable(
     read
     src/read_node.cpp
     src/Read.cpp
+    ${point_cloud_io_utility}
 )
 add_executable(
     write
     src/write_node.cpp
     src/Write.cpp
+    ${point_cloud_io_utility}
 )
 add_executable(
     bag
     src/bag_node.cpp
     src/Bag.cpp
+    ${point_cloud_io_utility}
 )
 
 ## Specify libraries to link executable targets against

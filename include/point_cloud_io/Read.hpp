@@ -56,24 +56,6 @@ private:
     void timerCallback(const ros::TimerEvent& timerEvent);
 
     /*!
-     * Determines the data contained in the given .ply file.
-     * @param filePath the path to the .ply file.
-     * @return a bitmask representing the data contained in the given .ply file:
-     *
-     * Bit |  Meaning
-     * ------------
-     * 0      XYZ found
-     * 1      RGB found
-     * 2      Normals found
-     * 3
-     * 4
-     * 5
-     * 6
-     * 7
-     */
-    uint8_t determinePLYData(const std::string& filePath);
-
-    /*!
      * Publish the point cloud as a PointCloud2.
      * @return true if successful.
      */

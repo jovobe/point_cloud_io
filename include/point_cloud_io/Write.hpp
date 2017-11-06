@@ -11,63 +11,32 @@
 // ROS
 #include <ros/ros.h>
 #include <sensor_msgs/PointCloud2.h>
+#include "Writer.hpp"
 
 namespace point_cloud_io
 {
 
-class Write
+class Write: public Writer
 {
 public:
     /*!
      * Constructor.
      * @param nodeHandle the ROS node handle.
      */
-    Write(ros::NodeHandle& nodeHandle);
-
-    /*!
-     * Destructor.
-     */
-    virtual ~Write();
+    explicit Write(ros::NodeHandle& nodeHandle);
 
 private:
     /*!
      * Reads and verifies the ROS parameters.
      * @return true if successful.
      */
-    bool readParameters();
-
-    /*!
-     * Point cloud callback function
-     * @param cloud point cloud message.
-     */
-    void pointCloudCallback(const sensor_msgs::PointCloud2ConstPtr& cloud);
-
-    //! ROS node handle.
-    ros::NodeHandle& nodeHandle_;
+    bool readParameters() override;
 
     //! Point cloud subscriber.
     ros::Subscriber pointCloudSubscriber_;
 
     //! Point cloud topic to subscribe to.
     std::string pointCloudTopic_;
-
-    //! Path to the point cloud folder.
-    std::string folderPath_;
-
-    //! Point cloud file prefix.
-    std::string filePrefix_;
-
-    //! Point cloud file ending.
-    std::string fileEnding_;
-
-    //! Point cloud counter.
-    unsigned int counter_ = 0;
-
-    //! Settings for generating file name.
-    bool addCounterToPath_ = true;
-    bool addFrameIdToPath_ = false;
-    bool addStampSecToPath_ = false;
-    bool addStampNSecToPath_ = false;
 };
 
 } /* namespace */

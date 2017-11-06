@@ -59,12 +59,14 @@ add_executable(
     write
     src/write_node.cpp
     src/Write.cpp
+    src/Writer.cpp
     ${point_cloud_io_utility}
 )
 add_executable(
     bag
     src/bag_node.cpp
     src/Bag.cpp
+    src/Writer.cpp
     ${point_cloud_io_utility}
 )
 

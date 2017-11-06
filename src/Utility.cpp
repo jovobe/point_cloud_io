@@ -1,6 +1,5 @@
 #include <pcl/PCLPointCloud2.h>
 #include <pcl/io/ply_io.h>
-#include <unordered_set>
 #include <ros/ros.h>
 #include "point_cloud_io/Utility.hpp"
 
@@ -8,6 +7,12 @@ namespace point_cloud_io
 {
 
 uint8_t determinePLYData(const std::string& filePath)
+{
+    auto fields = getFieldsFromPly(filePath);
+    return fields ? determinePLYChannelsByFields(*fields) : static_cast<uint8_t>(255);
+}
+
+boost::optional<unordered_set<string>> getFieldsFromPly(const std::string& filePath)
 {
     PCLPointCloud2 tempCloud;
     PLYReader p;
@@ -22,7 +27,7 @@ uint8_t determinePLYData(const std::string& filePath)
     if (a < 0)
     {
         ROS_ERROR_STREAM("Error reading header of " << filePath << "!");
-        return 255;
+        return boost::none;
     }
 
     // Check the found headers
@@ -32,6 +37,11 @@ uint8_t determinePLYData(const std::string& filePath)
         fields.insert(field.name);
     }
 
+    return fields;
+}
+
+uint8_t determinePLYChannelsByFields(unordered_set<string>& fields)
+{
     // Create bitmask (0 = LSB, 7 = MSB) to indicate which data was found
     // The bits mean the following, if they are set to 1:
     // Bit |  Meaning

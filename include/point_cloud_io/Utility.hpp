@@ -9,6 +9,7 @@
 
 #include <boost/optional.hpp>
 #include <pcl/point_cloud.h>
+#include <sensor_msgs/PointCloud2.h>
 
 using namespace std;
 using namespace pcl;
@@ -27,6 +28,13 @@ uint8_t determinePLYData(const std::string& filePath);
  * @return a set containing the names of the data fields in the given .ply file.
  */
 boost::optional<unordered_set<string>> getFieldsFromPly(const std::string& filePath);
+
+/*!
+ * Extracts the data fields from a given PointCloud2.
+ * @param cloud the given PointCloud2.
+ * @return a set containing the names of the data fields in the given PointCloud2.
+ */
+unordered_set<string> getFieldsFromPointCloud2(const sensor_msgs::PointCloud2ConstPtr& cloud);
 
 /*!
  * Determines the data of a .ply file or a PointCloud2 by it's fields.

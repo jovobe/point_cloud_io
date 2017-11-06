@@ -56,21 +56,59 @@ uint8_t determinePLYChannelsByFields(unordered_set<string>& fields)
     // 7
     // ------------
     uint8_t bitmask = 0;
-    if (fields.find("x") != fields.end() && fields.find("y") != fields.end() && fields.find("z") != fields.end())
+    if (
+        fields.find("x") != fields.end()
+        &&
+        fields.find("y") != fields.end()
+        &&
+        fields.find("z") != fields.end()
+       )
     {
         bitmask |= 1 << 0;
     }
-    if (fields.find("red") != fields.end() && fields.find("green") != fields.end() &&
-        fields.find("blue") != fields.end())
+    if (
+        (
+            fields.find("red")      != fields.end()
+            &&
+            fields.find("green")    != fields.end()
+            &&
+            fields.find("blue")     != fields.end()
+        )
+        ||
+        fields.find("rgb") != fields.end()
+       )
     {
         bitmask |= 1 << 1;
     }
-    if (fields.find("nx") != fields.end() && fields.find("ny") != fields.end() && fields.find("nz") != fields.end())
+    if (
+        (
+            fields.find("nx") != fields.end() || fields.find("normal_x") != fields.end()
+        )
+        &&
+        (
+            fields.find("ny") != fields.end() || fields.find("normal_y") != fields.end()
+        )
+        &&
+        (
+            fields.find("nz") != fields.end() || fields.find("normal_z") != fields.end()
+        )
+       )
     {
         bitmask |= 1 << 2;
     }
 
     return bitmask;
+}
+
+unordered_set<string> getFieldsFromPointCloud2(const sensor_msgs::PointCloud2ConstPtr& cloud)
+{
+    unordered_set<string> fields;
+    for (auto field: cloud->fields)
+    {
+        fields.insert(field.name);
+    }
+
+    return fields;
 }
 
 } /* namespace point_cloud_io */

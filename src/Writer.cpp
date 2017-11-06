@@ -3,6 +3,7 @@
 //
 
 #include "point_cloud_io/Writer.hpp"
+#include "point_cloud_io/Utility.hpp"
 
 //PCL
 #include <pcl/point_cloud.h>
@@ -74,13 +75,56 @@ void Writer::pointCloudCallback(const sensor_msgs::PointCloud2ConstPtr& cloud)
     if (fileEnding_ == "ply")
     {
         // Write .ply file.
-        PointCloud<PointXYZRGBNormal> pclCloud;
-        fromROSMsg(*cloud, pclCloud);
-
+        auto fields = getFieldsFromPointCloud2(cloud);
+        auto dataIndicator = determinePLYChannelsByFields(fields);
         PLYWriter writer;
-        if (writer.write(filePath.str(), pclCloud) != 0)
+        if (1 == dataIndicator)
         {
-            ROS_ERROR_STREAM("Something went wrong when trying to write the point cloud file.");
+            // XYZ found (Bitmask: 0000 0001)
+            PointCloud<PointXYZ> pointCloudXYZ;
+            fromROSMsg(*cloud, pointCloudXYZ);
+            if (writer.write(filePath.str(), pointCloudXYZ) != 0)
+            {
+                ROS_ERROR_STREAM("Something went wrong when trying to write the point cloud file.");
+                return;
+            }
+        }
+        else if (3 == dataIndicator)
+        {
+            // XYZ and RGB found (Bitmask: 0000 0011)
+            PointCloud<PointXYZRGB> pointCloudXYZRGB;
+            fromROSMsg(*cloud, pointCloudXYZRGB);
+            if (writer.write(filePath.str(), pointCloudXYZRGB) != 0)
+            {
+                ROS_ERROR_STREAM("Something went wrong when trying to write the point cloud file.");
+                return;
+            }
+        }
+        else if (5 == dataIndicator)
+        {
+            // XYZ and normals found (Bitmask: 0000 0101)
+            PointCloud<PointXYZINormal> pointCloudXYZN;
+            fromROSMsg(*cloud, pointCloudXYZN);
+            if (writer.write(filePath.str(), pointCloudXYZN) != 0)
+            {
+                ROS_ERROR_STREAM("Something went wrong when trying to write the point cloud file.");
+                return;
+            }
+        }
+        else if (7 == dataIndicator)
+        {
+            // XYZ, normals and RGB found (Bitmask: 0000 0111)
+            PointCloud<PointXYZRGBNormal> pointCloudXYZRGBN;
+            fromROSMsg(*cloud, pointCloudXYZRGBN);
+            if (writer.write(filePath.str(), pointCloudXYZRGBN) != 0)
+            {
+                ROS_ERROR_STREAM("Something went wrong when trying to write the point cloud file.");
+                return;
+            }
+        }
+        else
+        {
+            ROS_ERROR_STREAM("Fields defined in given PointCloud2 are not parseable!");
             return;
         }
     }
